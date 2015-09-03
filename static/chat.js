@@ -9,26 +9,38 @@ socket.on('connect', function(){
     socket.emit('new user', username);
 });
 
-$('form').submit(function(){
+$('form').submit(function() {
     var message = $('#m').val();
     socket.emit('send message', message);
     $('#m').val('');
     return false;
 });
 
+$('#m').keypress(function(e) {
+    if (e.which==13) {
+        $(this).blur();
+        $('form .btn').focus().click();
+        $('#m').focus();
+        return false;
+    }
+});
+
 socket.on('new message', function(username, message) {
     if (message.trim() != "") {
-        var element = '<b>'+username+':</b> '+message+'<br>'+'<i>'+jQuery.timeago(new Date())+'</i>'+'<br>';
+        var element = '<div>' +'<b>'+username+':</b> '+message+'<br>'+'</div>' +'<br>';
         $('#messages').append(element);
+        $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
     }   
 });
 
 socket.on('user joined', function(message) {
     $('#messages').append($('<li>').text(message));
+     $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
 });
 
 socket.on('user left', function(message) {
     $('#messages').append($('<li>').text(message));
+     $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
 });
 
 socket.on('update users', function(usernames, numUsers) {

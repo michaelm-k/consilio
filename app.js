@@ -25,8 +25,8 @@ var numUsers = 0;
 
 io.on('connection', function(socket){
   //   io.configure('production', function() {
-        io.set("transports", ["xhr-polling"]);
-        io.set("polling duration", 100);
+      //  io.set("transports", ["xhr-polling"]);
+       // io.set("polling duration", 100);
      //});
     var addedUser = false;
     

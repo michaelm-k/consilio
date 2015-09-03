@@ -7,11 +7,6 @@ var server = http.createServer(app);
 
 var io = sio.listen(server);
 
-io.configure(function () { 
-  io.set("transports", ["xhr-polling"]); 
-  io.set("polling duration", 20); 
-});
-
 app.set('views', __dirname + '/tpl');
 app.set('view engine', "jade");
 app.engine('jade', require('jade').__express);
@@ -29,6 +24,9 @@ var usernames = {};
 var numUsers = 0;
 
 io.on('connection', function(socket){
+     io.set("transports", ["xhr-polling"]);
+     io.set("polling duration", 100);
+    
     var addedUser = false;
     
     socket.on('send message', function(message) {

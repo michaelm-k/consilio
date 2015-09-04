@@ -1,7 +1,7 @@
 SC.initialize({
   client_id: "process.env['CLIENT_ID']"
 });
-// find all sounds of buskers licensed under 'creative commons share alike'
+
 var page_size=200;
 
 $('#search').keypress(function(e) {
@@ -22,7 +22,14 @@ $('#search').keypress(function(e) {
 
 document.addEventListener('click', function (event) {
     var anchor = event.target.closest("a");
+    if (anchor) {
+        socket.emit('new song', anchor.getAttribute('href'));
+    }   
+}, true);
+
+
+socket.on('update song', function(url) {
     var widgetIframe = document.getElementById('player');
     var widget = SC.Widget(widgetIframe);
-    widget.load(anchor.getAttribute('href'), {color: "ff0066"}, document.getElementById("player"));
-}, true);
+    widget.load(url, {color: "ff0066"},    document.getElementById("player"));
+});

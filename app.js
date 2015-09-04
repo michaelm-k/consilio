@@ -50,6 +50,10 @@ io.on('connection', function(socket){
         });
     });        */ 
     
+    socket.on('new song', function(url) {
+        io.emit('update song', url);
+    });
+    
     socket.on('disconnect', function() {
         if (addedUser) {
             socket.broadcast.emit('user left', socket.username + ' left');

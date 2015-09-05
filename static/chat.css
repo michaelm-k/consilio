@@ -36,6 +36,11 @@ form .btn-primary {
     margin-top:5px;
 }
 
+#users {
+    height:70%;
+    overflow-y:auto;
+}
+
 #messages { 
     width:100%;
     height:70%;
@@ -63,7 +68,6 @@ form .btn-primary {
     border-right:1px solid #c9d0da;
     height:100%;
     padding:10px;
-    overflow:scroll-y;
 }
 
 #search.form-control {

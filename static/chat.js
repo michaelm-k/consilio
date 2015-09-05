@@ -2,8 +2,9 @@ var url = window.location.href;
 var room = url.replace(/^(?:\/\/|[^\/]+)*\//, "");
 var socket = io();
 
+$("body").css("display", "none");
+
 socket.on('connect', function() {
-    $("body").css("display", "none");
     username = "";
     while (username == null || username.trim() == "" || username.length > 10) {
         username = prompt("Name? (max 10 characters)");

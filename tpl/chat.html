@@ -1,14 +1,4 @@
-<!doctype html>
-<html style="height: 100%;">
-  <head>
-    <title>consil.IO</title>
-    <meta name="description" content="Listen to this chat.">
-      <link rel="stylesheet" href="/static/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/chat.css">
-      <link rel="stylesheet" href="/static/player.css">
-  </head>
-  <body style="display:none;height:100%;">
-    <div class="users"><b style="color:#286090">USERS (<span id="user_count">0</span>)</b><br><div id="users"></div></div>
+<div class="users"><b style="color:#286090">USERS (<span id="user_count">0</span>)</b><br><div id="users"></div></div>
     <div class="container">
         <ul id="messages"></ul>
         <form action="">
@@ -18,15 +8,5 @@
         <input id="search" class="form-control" placeholder="Search SoundCloud"></input>
     </div>
     <div id="tracks"></div>
+    
     <iframe id="player" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/nyebeats/alison-wonderland-take-it-to-reality-new-years-eve-flip" scrolling="no" frameborder="no"></iframe>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://cdn.socket.io/socket.io-1.2.0.js">  </script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>   
-      <script src="//connect.soundcloud.com/sdk-2.0.0.js"></script>
-    <script src="/static/jquery.timeago.js"></script>
-    <script src="/static/bootstrap.min.js"></script>
-    <script src="/static/chat.js"></script>
-    <script src="/static/music.js"></script>
-    <script src="/static/api.js"></script>
-  </body>
-</html>

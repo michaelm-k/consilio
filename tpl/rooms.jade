@@ -1,4 +1,10 @@
 extends layout
 
+block append title
+    meta(name="description", content="Listen to this chat.")
+
 block content
     include rooms.html
+
+block append scripts
+    script(src="/static/rooms.js")

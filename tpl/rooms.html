@@ -1,20 +1,27 @@
-<h1>Create a room</h1>
+<div style="height:100%;float:left;width:80%;padding-top:10px;">
+<div style="letter-spacing:10px;font-weight:800;font-size:40px;text-align:center;">CONSIL.IO</div>
+    <hr>
+    <a href="/lobby"><h3>LOBBY</h3></a>
+</div>
+<div id="create_a_room" style="float:right;width:20%;border-left:1px solid #c9d0da;height:100%;padding-left:10px;padding-top:8px;">
+    <h1>Create a room</h1>
 
-<hr>
+    <hr>
 
-<form id='form-create_room' action="/rooms/new" method="POST">
-    <label>Room #: <input type='text' autocomplete="off" pattern= "^[0-9]{1,5}$" id="room_number" name='room_number' class="form-control" maxlength="5" required="true" style="width:70px;float:right;height:20px;"></label>
-    <br>
+    <form id='form-create_room' action="/rooms/new" method="POST">
+        <label>Room #: <input type='text' autocomplete="off" pattern= "^[0-9]{1,5}$" id="room_number" name='room_number' class="form-control" maxlength="5" required="true" style="width:70px;float:right;height:20px;margin-left:5px;"></label>
+        <hr>
         
-    <input type='radio' name='room_type' id='public' value='public' checked='true'> <label for="public">public?</label>
+        <input type='radio' name='room_type' id='public' value='public' checked='true'> <label for="public">public?</label>
     
-    <input type='radio' name='room_type' id='private' value='private'> <label for="private">private?</label>
-    <br>
-
-    <div id="enter_key" style="display:none">
-        <label>Enter key:</label><input id="key" autocomplete="off" type="password" name="key" class="form-control" style="width:70px;float:right;height:20px;"></label>        <br>
-    </div>
-
-    <input type="submit" id="create_room" class="btn btn-primary" value="Create room" style="display:block">
-</form>
-
+        <input type='radio' name='room_type' id='private' value='private'> <label for="private">private?</label>
+    
+        <br>
+        <div id="enter_key" style="display:none">
+            <hr>
+            <label>Enter key:<input id="key" autocomplete="off" type="password" name="key" class="form-control" style="width:70px;height:20px;display:inline-block;margin-left:5px;"></label>
+        </div>
+        <hr>
+        <input type="submit" id="create_room" class="btn btn-primary" value="Create room" style="display:block">
+    </form>
+</div>

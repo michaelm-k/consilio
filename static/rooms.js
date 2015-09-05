@@ -9,7 +9,7 @@ $('#create_room').click(function() {
 });
 
 $('#private').click(function() {
-   $("#enter_key").css("display", "inline-block");
+   $("#enter_key").css("display", "inline");
 });
 
 $('#public').click(function() {

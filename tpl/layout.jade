@@ -1,12 +1,15 @@
 doctype html
-html
+html(style={height:'100%'})
   head
-    link(rel="stylesheet", href="/static/bootstrap.min.css")
-  body
+    block title
+        title CONSIL.IO
+    block head
+        link(rel="stylesheet", href="/static/bootstrap.min.css")
+  body(style={height:'100%'})
     block content
     
-    script(src="/socket.io/socket.io.js")
-    script(src="https://cdn.socket.io/socket.io-1.2.0.js")  
-    script(src="https://code.jquery.com/jquery-1.11.1.js")  
-    script(src="/static/bootstrap.min.js") 
-    script(src="/static/rooms.js")
+    block scripts
+        script(src="/socket.io/socket.io.js")
+        script(src="https://cdn.socket.io/socket.io-1.2.0.js")  
+        script(src="https://code.jquery.com/jquery-1.11.1.js")  
+        script(src="/static/bootstrap.min.js") 

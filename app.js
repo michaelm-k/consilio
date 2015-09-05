@@ -39,7 +39,7 @@ app.get('/:room', function (req, res) {
     if (findRoomByRoomNumber(room_number)) {
         res.render("chat"); 
     } else {
-         res.render("vacant");
+         res.render("rooms");
     }
 });
 
@@ -54,15 +54,6 @@ function countUsersInRoom(roomName) {
     var room = io.sockets.adapter.rooms[roomName];
     if (!room) return null;
     return Object.keys(room).length;
-}
-
-function getUsersInRoom(roomName) {
-    var roomMembers = [];
-    var room = io.sockets.adapter.rooms[roomName];
-    for(var clientID in room) {
-        roomMembers.push(io.sockets.connected[clientID]);
-    }
-    return roomMembers;
 }
 
 io.on('connection', function(socket){   

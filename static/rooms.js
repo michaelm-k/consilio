@@ -1,5 +1,5 @@
 var socket = io();
-
+$("body").css("display", "block");
 $('#create_room').click(function() {
     if ($('#public').is(':checked')) { 
         document.getElementById("key").required = false;

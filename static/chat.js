@@ -2,14 +2,32 @@ var url = window.location.href;
 var room = url.replace(/^(?:\/\/|[^\/]+)*\//, "");
 var socket = io();
 
-$("body").css("display", "none");
-
 socket.on('connect', function() {
-    username = "";
+    socket.emit('key or no key', room);
+});
+
+socket.on('enter key', function(key) {
+    var _key = "";
+    while (_key !== key) {
+        _key = prompt("Please enter the room's key:");
+    }
+    socket.emit('key good', room);
+});
+
+socket.on('enter username', function() {
+    var username = "";
     while (username == null || username.trim() == "" || username.length > 10) {
         username = prompt("Name? (max 10 characters)");
     }
-    $("body").css("display", "block");
+    socket.emit('new user', username, room);
+});
+
+socket.on('username is taken', function() {
+    alert("That username is taken");
+    var username = "";
+    while (username == null || username.trim() == "" || username.length > 10) {
+        username = prompt("Name? (max 10 characters)");
+    }
     socket.emit('new user', username, room);
 });
 
@@ -25,6 +43,7 @@ $('#m').keypress(function(e) {
         $(this).blur();
         $('form .btn').focus().click();
         $('#m').focus();
+        alert(sockets[0].username);
         return false;
     }
 });
@@ -38,13 +57,20 @@ socket.on('new message', function(username, message) {
 });
 
 socket.on('user joined', function(message) {
+    $("body").css("display", "block");
     $('#messages').append($('<li>').text(message));
-     $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
+    $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
+});
+
+socket.on('you joined', function(message) {
+    $("body").css("display", "block");
+    $('#messages').append($('<li>').text(message));
+    $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
 });
 
 socket.on('user left', function(message) {
     $('#messages').append($('<li>').text(message));
-     $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
+    $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
 });
 
 socket.on('update users', function(usernames, numUsers) {

@@ -18,6 +18,7 @@ app.use("/static", express.static(__dirname + '/static'));
 var rooms = {}; // empty object of all room numbers
 var numUsers=0;
 var sockets = [];
+var keys={};
 
 function findRoomByRoomNumber(room_number) {
     if (rooms.hasOwnProperty(room_number)) {
@@ -46,8 +47,19 @@ app.get('/:room', function (req, res) {
 app.post('/rooms/new', function (req, res) {
     var room_number = req.body.room_number;
     var key = req.body.key;
-    rooms[room_number] = room_number;
-    res.redirect('/' + room_number);   
+    if (!(findRoomByRoomNumber(room_number))) {
+        rooms[room_number] = room_number;
+        if (key) {
+            keys[room_number]=key;
+        } else {
+            if (keys.hasOwnProperty(room_number)) {
+                delete keys[room_number];
+            }          
+        }
+         res.redirect('/' + room_number); 
+    } else {
+         res.redirect('/'); 
+    }   
 });
 
 function countUsersInRoom(roomName) {
@@ -56,33 +68,59 @@ function countUsersInRoom(roomName) {
     return Object.keys(room).length;
 }
 
-io.on('connection', function(socket){   
-    socket.on('send message', function(message) {
-        io.to(socket.room).emit('new message', socket.username, message);
+function usernameExistsInRoom(username, room) {
+    for (var i=0;i<sockets.length;i++) {
+        if (typeof sockets[i] != "undefined" && sockets[i].room==room && sockets[i].username==username) {
+            return true;
+        }
+    }
+    return false;
+}
+
+io.on('connection', function(socket){      
+    socket.on('key or no key', function(room) {
+        if (keys.hasOwnProperty(room)) {
+            socket.emit('enter key', keys[room]);
+        } else {
+            socket.emit('enter username');
+        }
+    });
+    
+    socket.on('key good', function() {
+        socket.emit('enter username');
     });
     
     socket.on('new user', function(username, room) {
-        socket.username = username;
-        socket.room = room;
-        socket.join(room);
-        
-        rooms[room] = room;
-        
-        numUsers = countUsersInRoom(room);
-        sockets.push(socket);
-        
-        var usernames={};
-        for(var i = 0; i < sockets.length; i++) {
-            if (sockets[i] !== null && sockets[i].room==socket.room) {
-                var username=sockets[i].username;
-                usernames[username]=username;
+        if (!(usernameExistsInRoom(username, room))) {
+            socket.username = username;
+            socket.room = room;
+            socket.join(room);
+            
+            if (!(rooms.hasOwnProperty(room))) {
+                rooms[room] = room;
             }
-        }
-
-        socket.emit('user joined', 'welcome, ' + username, numUsers);
-        socket.broadcast.to(socket.room).emit('user joined', username + ' joined', numUsers);
         
-        io.to(room).emit('update users', usernames, numUsers);
+            numUsers = countUsersInRoom(room);
+            sockets.push(socket);
+        
+            var usernames={};
+            for(var i = 0; i < sockets.length; i++) {
+                if (typeof sockets[i] != "undefined" && sockets[i].room==socket.room) {
+                    var username=sockets[i].username;
+                    usernames[username]=username;
+                }
+            }
+
+            socket.emit('you joined', 'welcome, ' + username, numUsers);
+            socket.broadcast.to(socket.room).emit('user joined', username + ' joined', numUsers); 
+            io.to(room).emit('update users', usernames, numUsers);
+        } else {
+            socket.emit('username is taken');
+        }
+    });
+    
+    socket.on('send message', function(message) {
+        io.to(socket.room).emit('new message', socket.username, message);
     });
     
     socket.on('new song', function(url) {
@@ -93,23 +131,25 @@ io.on('connection', function(socket){
         socket.leave(socket.room);
 
         for(var i = 0; i < sockets.length; i++) {
-            if (sockets[i] !== null && sockets[i].username==socket.username) {
-                sockets.splice(i);
+            if (typeof sockets[i] != "undefined" && sockets[i].username==socket.username && sockets[i].room==socket.room) {
+                delete sockets[i];
             }
         }
         var usernames={};
         for(var i = 0; i < sockets.length; i++) {
-            if (sockets[i] !== null && sockets[i].room==socket.room) {
+            if (typeof sockets[i] != "undefined" && sockets[i].room==socket.room) {
                 var username=sockets[i].username;
                 usernames[username] = username;
             }
         }
         numUsers = countUsersInRoom(socket.room);
-        if (numUsers==null && socket.room!=='lobby') {
+        if (numUsers==null && socket.room!='lobby') {
             delete rooms[socket.room];
         } else {
-            socket.broadcast.to(socket.room).emit('user left', socket.username + ' left');
-            io.to(socket.room).emit('update users', usernames, numUsers);
+            if (numUsers!=null) {
+                socket.broadcast.to(socket.room).emit('user left', socket.username + ' left');
+                io.to(socket.room).emit('update users', usernames, numUsers);
+            }
         }       
     });   
 });

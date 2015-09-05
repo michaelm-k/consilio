@@ -1,0 +1,20 @@
+<h1>Create a room</h1>
+
+<hr>
+
+<form id='form-create_room' action="/rooms/new" method="POST">
+    <label>Room #: <input type='text' autocomplete="off" pattern= "^[0-9]{1,5}$" id="room_number" name='room_number' class="form-control" maxlength="5" required="true" style="width:70px;float:right;height:20px;"></label>
+    <br>
+        
+    <input type='radio' name='room_type' id='public' value='public' checked='true'> <label for="public">public?</label>
+    
+    <input type='radio' name='room_type' id='private' value='private'> <label for="private">private?</label>
+    <br>
+
+    <div id="enter_key" style="display:none">
+        <label>Enter key:</label><input id="key" autocomplete="off" type="password" name="key" class="form-control" style="width:70px;float:right;height:20px;"></label>        <br>
+    </div>
+
+    <input type="submit" id="create_room" class="btn btn-primary" value="Create room" style="display:block">
+</form>
+

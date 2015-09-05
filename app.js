@@ -1,4 +1,5 @@
 var express = require('express');
+var bodyParser = require('body-parser')
 var http = require('http');
 var sio = require('socket.io');
 var app = express();
@@ -7,62 +8,116 @@ var server = http.createServer(app);
 
 var io = sio.listen(server);
 
+app.use(bodyParser());
+
 app.set('views', __dirname + '/tpl');
 app.set('view engine', "jade");
 app.engine('jade', require('jade').__express);
-app.use(express.static(__dirname + '/static'));
+app.use("/static", express.static(__dirname + '/static'));
 
-app.get('/login', function (req, res) {
-  res.render("login");
+var room_numbers = {}; // empty object of all room numbers
+var numUsers=0;
+var sockets = [];
+
+function findRoomByRoomNumber(room_number) {
+    if (room_numbers.hasOwnProperty(room_number)) {
+        return true;
+    }
+    return false;
+}
+  
+app.get('/lobby', function (req, res) {
+    res.render("chat");
 });
 
 app.get('/', function (req, res) {
-  res.render("chat");
+    res.render("rooms");
 });
 
-var usernames = {};
-var numUsers = 0;
+app.get('/:room', function (req, res) {
+    var room_number = req.params.room;
+    if (findRoomByRoomNumber(room_number)) {
+        res.render("chat"); 
+    } else {
+         res.render("vacant");
+    }
+});
 
-io.on('connection', function(socket){
-    var addedUser = false;
-    
+app.post('/rooms/new', function (req, res) {
+    var room_number = req.body.room_number;
+    var key = req.body.key;
+    room_numbers[room_number] = room_number;
+    res.redirect('/' + room_number);   
+});
+
+function countUsersInRoom(roomName) {
+    var room = io.sockets.adapter.rooms[roomName];
+    if (!room) return null;
+    return Object.keys(room).length;
+}
+
+function getUsersInRoom(roomName) {
+    var roomMembers = [];
+    var room = io.sockets.adapter.rooms[roomName];
+    for(var clientID in room) {
+        roomMembers.push(io.sockets.connected[clientID]);
+    }
+    return roomMembers;
+}
+
+io.on('connection', function(socket){   
     socket.on('send message', function(message) {
-        io.emit('new message', socket.username, message);
+        io.to(socket.room).emit('new message', socket.username, message);
     });
     
-    socket.on('new user', function(username) {
+    socket.on('new user', function(username, room) {
         socket.username = username;
+        socket.room = room;
+        socket.join(room);
         
-        usernames[username] = username;
-        ++numUsers;
-        addedUser = true;
+        numUsers = countUsersInRoom(socket.room);
+        sockets.push(socket);
         
+        var usernames={};
+        for(var i = 0; i < sockets.length; i++) {
+            if (sockets[i] !== null && sockets[i].room==socket.room) {
+                var username=sockets[i].username;
+                usernames[username]=username;
+            }
+        }
+
         socket.emit('user joined', 'welcome, ' + username, numUsers);
-        socket.broadcast.emit('user joined', username + ' joined', numUsers);
+        socket.broadcast.to(socket.room).emit('user joined', username + ' joined', numUsers);
         
-        io.emit('update users', usernames, numUsers);
+        io.to(room).emit('update users', usernames, numUsers);
     });
-    
-    /*  
-    socket.on('typing', function() {
-        io.emit('typing', {
-            username: socket.username
-        });
-    });        */ 
     
     socket.on('new song', function(url) {
-        io.emit('update song', url);
+        io.to(socket.room).emit('update song', url);
     });
     
     socket.on('disconnect', function() {
-        if (addedUser) {
-            socket.broadcast.emit('user left', socket.username + ' left');
-            
-            delete usernames[socket.username];
-            --numUsers;
-                
-            io.emit('update users', usernames, numUsers);
+        socket.leave(socket.room);
+       // delete usernames[socket.username];
+        for(var i = 0; i < sockets.length; i++) {
+            if (sockets[i] !== null && sockets[i].username==socket.username) {
+                sockets.splice(i);
+            }
         }
+        var usernames={};
+        for(var i = 0; i < sockets.length; i++) {
+            if (sockets[i] !== null && sockets[i].room==socket.room) {
+                var username=sockets[i].username;
+                usernames[username] = username;
+            }
+        }
+        numUsers = countUsersInRoom(socket.room);
+        if (numUsers==null && socket.room!=='lobby') {
+            delete room_numbers[socket.room];
+        } else {
+            socket.broadcast.to(socket.room).emit('user left', socket.username + ' left');
+            io.to(socket.room).emit('update users', usernames, numUsers);
+        }       
     });   
 });
 

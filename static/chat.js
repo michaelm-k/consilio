@@ -1,12 +1,15 @@
+//var socket=io();
+var url = window.location.href;
+var room = url.replace(/^(?:\/\/|[^\/]+)*\//, "");
 var socket = io();
 
-socket.on('connect', function(){
+socket.on('connect', function() {
     username = "";
     while (username == null || username.trim() == "" || username.length > 10) {
         username = prompt("Name? (max 10 characters)");
     }
     $("body").css("display", "block");
-    socket.emit('new user', username);
+    socket.emit('new user', username, room);
 });
 
 $('form').submit(function() {

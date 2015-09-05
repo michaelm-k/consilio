@@ -35,6 +35,7 @@ $('form').submit(function() {
     var message = $('#m').val();
     socket.emit('send message', message);
     $('#m').val('');
+    $('#m').focus();
     return false;
 });
 
@@ -43,7 +44,6 @@ $('#m').keypress(function(e) {
         $(this).blur();
         $('form .btn').focus().click();
         $('#m').focus();
-        alert(sockets[0].username);
         return false;
     }
 });

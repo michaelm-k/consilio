@@ -15,12 +15,12 @@ app.set('view engine', "jade");
 app.engine('jade', require('jade').__express);
 app.use("/static", express.static(__dirname + '/static'));
 
-var room_numbers = {}; // empty object of all room numbers
+var rooms = {}; // empty object of all room numbers
 var numUsers=0;
 var sockets = [];
 
 function findRoomByRoomNumber(room_number) {
-    if (room_numbers.hasOwnProperty(room_number)) {
+    if (rooms.hasOwnProperty(room_number)) {
         return true;
     }
     return false;
@@ -46,7 +46,7 @@ app.get('/:room', function (req, res) {
 app.post('/rooms/new', function (req, res) {
     var room_number = req.body.room_number;
     var key = req.body.key;
-    room_numbers[room_number] = room_number;
+    rooms[room_number] = room_number;
     res.redirect('/' + room_number);   
 });
 
@@ -66,7 +66,9 @@ io.on('connection', function(socket){
         socket.room = room;
         socket.join(room);
         
-        numUsers = countUsersInRoom(socket.room);
+        rooms[room] = room;
+        
+        numUsers = countUsersInRoom(room);
         sockets.push(socket);
         
         var usernames={};
@@ -89,7 +91,7 @@ io.on('connection', function(socket){
     
     socket.on('disconnect', function() {
         socket.leave(socket.room);
-       // delete usernames[socket.username];
+
         for(var i = 0; i < sockets.length; i++) {
             if (sockets[i] !== null && sockets[i].username==socket.username) {
                 sockets.splice(i);
@@ -104,7 +106,7 @@ io.on('connection', function(socket){
         }
         numUsers = countUsersInRoom(socket.room);
         if (numUsers==null && socket.room!=='lobby') {
-            delete room_numbers[socket.room];
+            delete rooms[socket.room];
         } else {
             socket.broadcast.to(socket.room).emit('user left', socket.username + ' left');
             io.to(socket.room).emit('update users', usernames, numUsers);

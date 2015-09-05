@@ -32,7 +32,7 @@ function isRoomNumberOccupied(room_number) {
 }
   
 app.get('/lobby', function (req, res) {
-    res.render("chat");
+    res.render("chat", {title: 'LOBBY'});
 });
 
 app.get('/', function (req, res) {
@@ -42,7 +42,7 @@ app.get('/', function (req, res) {
 app.get('/:room', function (req, res) {
     var room_number = req.params.room;
     if (isRoomNumberOccupied(room_number)) {
-        res.render("chat"); 
+        res.render("chat", {title: 'ROOM '+ room_number}); 
     } else {
          res.render("rooms");
     }

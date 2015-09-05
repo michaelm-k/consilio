@@ -1,5 +1,8 @@
 var express = require('express');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
+var flash = require('connect-flash');
 var http = require('http');
 var sio = require('socket.io');
 var app = express();
@@ -9,6 +12,9 @@ var server = http.createServer(app);
 var io = sio.listen(server);
 
 app.use(bodyParser());
+app.use(cookieParser('secret'));
+app.use(session({cookie: { maxAge: 60000 }}));
+app.use(flash());
 
 app.set('views', __dirname + '/tpl');
 app.set('view engine', "jade");
@@ -63,7 +69,8 @@ app.post('/rooms/new', function (req, res) {
         }
          res.redirect('/' + room_number); 
     } else {
-         res.redirect('/'); 
+         req.flash('info', "That room is taken");
+         res.render('rooms', {message: req.flash('info')});
     }   
 });
 

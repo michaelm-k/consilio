@@ -5,6 +5,9 @@ block append title
 
 block content
     include rooms.html
-
+    -if(message)
+        script.
+            alert('#{message}');
+    
 block append scripts
     script(src="/static/rooms.js")

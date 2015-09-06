@@ -1,6 +1,18 @@
 var url = window.location.href;
 var room = url.replace(/^(?:\/\/|[^\/]+)*\//, "");
 var socket = io();
+var isFocused = true;
+
+function onFocus(){
+    isFocused = true;
+};
+
+function onBlur() {
+    isFocused = false;
+};
+
+window.onfocus = onFocus;
+window.onblur = onBlur;
 
 socket.on('connect', function() {
     socket.emit('key or no key', room);
@@ -48,12 +60,29 @@ $('#m').keypress(function(e) {
     }
 });
 
-socket.on('new message', function(username, message) {
+socket.on('new message', function(username, message, room) {
     if (message.trim() != "") {
         var element = '<div>' +'<b>'+username+':</b> '+message+'<br>'+'</div>' +'<br>';
         $('#messages').append(element);
         $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
     }   
+    
+    if (!isFocused) {    
+        if (room=='lobby') {
+            document.title = '[!!!] LOBBY | CONSIL.IO';
+        } else {
+            document.title = '[!!!] '+'ROOM '+room + ' | CONSIL.IO';
+        }
+    }
+
+    window.onfocus = function() {
+        isFocused=true;
+        if (room=='lobby') {
+            document.title = 'LOBBY | CONSIL.IO';
+        } else {
+            document.title = 'ROOM '+room + ' | CONSIL.IO';
+        }
+    }
 });
 
 socket.on('user joined', function(message) {

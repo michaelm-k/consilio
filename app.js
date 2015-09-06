@@ -138,7 +138,7 @@ io.on('connection', function(socket){
     });
     
     socket.on('send message', function(message) {
-        io.to(socket.room).emit('new message', socket.username, message);
+        io.to(socket.room).emit('new message', socket.username, message, socket.room);
     });
     
     socket.on('new song', function(url) {

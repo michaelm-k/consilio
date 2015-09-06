@@ -129,8 +129,8 @@ io.on('connection', function(socket){
                 }
             }
 
-            socket.emit('you joined', 'welcome, ' + username, numUsers);
-            socket.broadcast.to(socket.room).emit('user joined', username + ' joined', numUsers); 
+            socket.emit('you joined', 'welcome, ' + username, username);
+            socket.broadcast.to(socket.room).emit('user joined', username + ' joined'); 
             io.to(room).emit('update users', usernames, numUsers);
         } else {
             socket.emit('username is taken');

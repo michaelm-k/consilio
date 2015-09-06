@@ -3,6 +3,7 @@ var room = url.replace(/^(?:\/\/|[^\/]+)*\//, "");
 var socket = io();
 var isFocused = true;
 var unread_messages=0;
+var client_username;
 
 function onFocus(){
     isFocused = true;
@@ -94,7 +95,8 @@ socket.on('user joined', function(message) {
     $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
 });
 
-socket.on('you joined', function(message) {
+socket.on('you joined', function(message, username) {
+    client_username = username;
     $("body").css("display", "block");
     $('#messages').append($('<li>').text(message));
     $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
@@ -110,6 +112,10 @@ socket.on('update users', function(usernames, numUsers) {
     $('#users_count').append(numUsers);
     $('#users').empty();
     $.each(usernames, function(key, value) {
-        $('#users').append('<div>'+key+'</div>');
+        if (key==client_username) {
+            $('#users').append('<div>'+'<b>'+key+'</b>'+'</div>');
+        } else {
+            $('#users').append('<div>'+key+'</div>');
+        }
     });
 });

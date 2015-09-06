@@ -163,6 +163,7 @@ form .btn-primary {
         float:none;
         height:450px;
         margin-bottom:25px;
+        border:none;
     }
     #player {
         width:100%;

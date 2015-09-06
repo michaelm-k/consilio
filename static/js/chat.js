@@ -73,7 +73,7 @@ socket.on('new message', function(username, message, room) {
         if (room=='lobby') {
             document.title = '('+unread_messages+') '+ 'LOBBY | CONSIL.IO';
         } else {
-            document.title = '( '+unread_messages+') '+'ROOM '+room + ' | CONSIL.IO';
+            document.title = '('+unread_messages+') '+'ROOM '+room + ' | CONSIL.IO';
         }
     }
 

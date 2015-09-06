@@ -4,12 +4,12 @@ html(style={height:'100%'})
     block title
         title CONSIL.IO
     block head
-        link(rel="stylesheet", href="/static/bootstrap.min.css")
+        link(rel="stylesheet", href="/static/css/bootstrap.min.css")
   body(style={height:'100%', display: 'none'})
     block content
     
     block scripts
+        script(src="https://code.jquery.com/jquery-1.11.1.js")  
+        script(src="/static/js/bootstrap.min.js") 
         script(src="/socket.io/socket.io.js")
         script(src="https://cdn.socket.io/socket.io-1.2.0.js")  
-        script(src="https://code.jquery.com/jquery-1.11.1.js")  
-        script(src="/static/bootstrap.min.js") 

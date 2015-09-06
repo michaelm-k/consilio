@@ -5,15 +5,15 @@ block title
 
 block append head
      link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css")
-     link(rel="stylesheet", href="/static/chat.css")
-     link(rel="stylesheet", href="/static/player.css") 
+     link(rel="stylesheet", href="/static/css/chat.css")
+     link(rel="stylesheet", href="/static/css/player.css") 
 
 block content
     include chat.html
         
 block append scripts
     script(src="//connect.soundcloud.com/sdk-2.0.0.js")
-    script(src="/static/jquery.timeago.js")
-    script(src="/static/chat.js")
-    script(src="/static/music.js")
-    script(src="/static/api.js")
+    script(src="/static/js/soundcloud_api.js")
+    script(src="/static/js/jquery.timeago.js")
+    script(src="/static/js/chat.js")
+    script(src="/static/js/music.js")

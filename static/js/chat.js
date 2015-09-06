@@ -2,6 +2,7 @@ var url = window.location.href;
 var room = url.replace(/^(?:\/\/|[^\/]+)*\//, "");
 var socket = io();
 var isFocused = true;
+var unread_messages=0;
 
 function onFocus(){
     isFocused = true;
@@ -68,15 +69,17 @@ socket.on('new message', function(username, message, room) {
     }   
     
     if (!isFocused) {    
+        ++unread_messages;
         if (room=='lobby') {
-            document.title = '[!!!] LOBBY | CONSIL.IO';
+            document.title = '('+unread_messages+') '+ 'LOBBY | CONSIL.IO';
         } else {
-            document.title = '[!!!] '+'ROOM '+room + ' | CONSIL.IO';
+            document.title = '( '+unread_messages+') '+'ROOM '+room + ' | CONSIL.IO';
         }
     }
 
     window.onfocus = function() {
         isFocused=true;
+        unread_messages=0;
         if (room=='lobby') {
             document.title = 'LOBBY | CONSIL.IO';
         } else {

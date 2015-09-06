@@ -2,6 +2,9 @@ SC.initialize({
   client_id: "process.env['CLIENT_ID']"
 });
 
+var widgetIframe = document.getElementById('player');
+var widget = SC.Widget(widgetIframe);
+
 var page_size=200;
 
 $('#search').keypress(function(e) {
@@ -28,8 +31,6 @@ document.addEventListener('click', function (event) {
 }, true);
 
 
-socket.on('update song', function(url) {
-    var widgetIframe = document.getElementById('player');
-    var widget = SC.Widget(widgetIframe);
-    widget.load(url, {color: "ff0066"},    document.getElementById("player"));
+socket.on('update song', function(url) {   
+    widget.load(url, {color: "ff0066", auto_play:true});
 });

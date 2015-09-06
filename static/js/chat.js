@@ -106,8 +106,8 @@ socket.on('user left', function(message) {
 });
 
 socket.on('update users', function(usernames, numUsers) {
-    $('#user_count').empty();
-    $('#user_count').append(numUsers);
+    $('#users_count').empty();
+    $('#users_count').append(numUsers);
     $('#users').empty();
     $.each(usernames, function(key, value) {
         $('#users').append('<div>'+key+'</div>');

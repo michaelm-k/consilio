@@ -9,6 +9,7 @@ var page_size=200;
 
 $('#search').keypress(function(e) {
     if (e.which==13) {
+        $('#tracks').css('display', 'block');
         var query = $('#search').val();
         $('#search').val('');
         $('#tracks').empty();

@@ -55,4 +55,7 @@
     #create_room {
          display:inline-block;
     }
+    #form-create_room {
+        margin-bottom:20px;
+    }
 }

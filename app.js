@@ -36,13 +36,17 @@ function isRoomNumberOccupied(room_number) {
     }
     return false;
 }
-  
-app.get('/lobby', function (req, res) {
-    res.render("chat", {title: 'LOBBY'});
-});
 
 app.get('/', function (req, res) {
     res.render("rooms");
+});
+
+app.get('/please_upgrade', function (req, res) {
+    res.render("please_upgrade");
+});
+
+app.get('/lobby', function (req, res) {
+    res.render("chat", {title: 'LOBBY'});
 });
 
 app.get('/:room', function (req, res) {

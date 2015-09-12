@@ -13,7 +13,7 @@ $('#search').keypress(function(e) {
         var query = $('#search').val();
         $('#search').val('');
         $('#tracks').empty();
-		$('#tracks').append('<div>'+'Loading . . .'+'</div>');
+		$('#tracks').append('<div>'+'Loading... Please wait'+'</div>');
         SC.get('/tracks', { limit: page_size, q: query }, function(tracks) {
 			$('#tracks').empty();
 			if (tracks) {

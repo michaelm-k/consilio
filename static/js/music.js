@@ -13,13 +13,19 @@ $('#search').keypress(function(e) {
         var query = $('#search').val();
         $('#search').val('');
         $('#tracks').empty();
+		$('#tracks').append('<div>'+'Loading . . .'+'</div>');
         SC.get('/tracks', { limit: page_size, q: query }, function(tracks) {
-            $.each(tracks, function(key, track) {
-                var element='<div>'+'<a>'+track.title+'</a>'+'</div>';
-                $('#tracks').append(element);  
-                $("#tracks a").last().attr("href",track.permalink_url);
-                $("#tracks a").last().bind('click', false);
-            });
+			$('#tracks').empty();
+			if (tracks) {
+				$.each(tracks, function(key, track) {
+					var element='<div>'+'<a>'+track.title+'</a>'+'</div>';
+					$('#tracks').append(element);  
+					$("#tracks a").last().attr("href", track.permalink_url);
+					$("#tracks a").last().bind('click', false);
+				});
+			} else {
+				$('#tracks').append('<div>'+'Nothing matched your search. Try again?'+'</div>');
+			}
         });
     }
 });

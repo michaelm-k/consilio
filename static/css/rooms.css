@@ -2,7 +2,7 @@
     text-align:center;height:70%;overflow-y:auto;
 }
 #main {
-    height:100%;float:left;width:70%;padding-top:10px;
+    height:100%;float:left;width:75%;padding-top:10px;
 }
 
 #heading1{
@@ -14,7 +14,7 @@
 }
 
 #create_a_room {
-    float:right;width:30%;border-left:1px solid #c9d0da;height:100%;padding-left:10px;padding-top:8px;
+    float:right;width:25%;border-left:1px solid #c9d0da;height:100%;padding-left:10px;padding-top:8px;
 }
 
 #room_number {
@@ -31,6 +31,15 @@
 
 #create_room {
     display:block;
+}
+
+@media (max-width: 1100px) {
+	#main {
+		width:70%;
+	}
+	#create_a_room  {
+		width:30%;
+	}
 }
 
 @media (max-width: 850px) {

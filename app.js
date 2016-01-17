@@ -21,6 +21,10 @@ app.set('view engine', "jade");
 app.engine('jade', require('jade').__express);
 app.use("/static", express.static(__dirname + '/static'));
 
+if (!process.env.NODE_ENV) {
+	require('./env.js');
+}
+
 var room_numbers = {}; // empty object of all room numbers
 var numUsers=0;
 var sockets = [];

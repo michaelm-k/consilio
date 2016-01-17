@@ -12,7 +12,7 @@
 
     <hr>
 
-    <form id='form-create_room' action="/rooms/new" method="POST">
+    <form id='form-create_room' action="/rooms" method="POST">
         <label>Room #: <input type='text' autocomplete="off" pattern= "^[0-9]{1,5}$" id="room_number" name='room_number' class="form-control" maxlength="5" required="true"></label>
         <hr>
         
@@ -26,6 +26,6 @@
             <label>Key:<input id="key" autocomplete="off" type="password" name="key" class="form-control"></label>
         </div>
         <hr>
-        <input type="submit" id="create_room" class="btn btn-primary" value="Create room">
+        <input type="submit" id="create_room" class="btn btn-primary">
     </form>
 </div>

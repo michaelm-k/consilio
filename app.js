@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var flash = require('connect-flash');
 var http = require('http');
 var sio = require('socket.io');
+var SC = require('node-soundcloud'); // https://www.npmjs.com/package/node-soundcloud
 var app = express();
 var port = process.env.PORT || 5000;
 var server = http.createServer(app);
@@ -24,6 +25,10 @@ app.use("/static", express.static(__dirname + '/static'));
 if (!process.env.NODE_ENV) {
 	require('./env.js');
 }
+
+SC.init({
+  id: process.env.CLIENT_ID
+});
 
 var room_numbers = {}; // empty object of all room numbers
 var numUsers=0;
@@ -53,6 +58,14 @@ app.get('/lobby', function (req, res) {
     res.render("chat", {title: 'LOBBY'});
 });
 
+app.post('/search', function (req, res) {
+    SC.get('/tracks', { limit: req.body.page_size, q: req.body.query }, function(err, tracks) {
+        if (err) console.log(err);
+        console.log(tracks);
+        res.json({data:tracks});
+    });
+});
+
 app.get('/:room', function (req, res) {
     var room_number = req.params.room;
     if (isRoomNumberOccupied(room_number)) {
@@ -62,7 +75,7 @@ app.get('/:room', function (req, res) {
     }
 });
 
-app.post('/rooms/new', function (req, res) {
+app.post('/rooms', function (req, res) {
     var room_number = req.body.room_number;
     var key = req.body.key;
     if (!(isRoomNumberOccupied(room_number))) {

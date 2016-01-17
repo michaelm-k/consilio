@@ -1,7 +1,3 @@
-SC.initialize({
-  client_id: process.env.CLIENT_ID
-});
-
 var widgetIframe = document.getElementById('player');
 var widget = SC.Widget(widgetIframe);
 
@@ -11,21 +7,31 @@ $('#search').keypress(function(e) {
     if (e.which==13) {
         $('#tracks').css('display', 'block');
         var query = $('#search').val();
-        $('#search').val('');
         $('#tracks').empty();
-		$('#tracks').append('<div>'+'Loading... Please wait'+'</div>');
-        SC.get('/tracks', { limit: page_size, q: query }, function(tracks) {
-			$('#tracks').empty();
-			if (tracks) {
-				$.each(tracks, function(key, track) {
-					var element='<div>'+'<a>'+track.title+'</a>'+'</div>';
-					$('#tracks').append(element);  
-					$("#tracks a").last().attr("href", track.permalink_url);
-					$("#tracks a").last().bind('click', false);
-				});
-			} else {
-				$('#tracks').append('<div>'+'Nothing matched your search. Try again?'+'</div>');
-			}
+		$('#tracks').append('<div>Loading... Please wait</div>');
+
+        $.ajax({
+            type: 'POST',
+            data: {page_size: page_size, query: query},
+            url: '/search',						
+            success: function(response) {
+                var tracks = response.data;
+                $('#tracks').empty();
+			    if (tracks) {
+				    $.each(tracks, function(key, track) {
+					   var element='<div><a>'+track.title+'</a></div>';
+					   $('#tracks').append(element);  
+					   $("#tracks a").last().attr("href", track.permalink_url);
+					   $("#tracks a").last().bind('click', false);
+				    });
+			     } else {
+				    $('#tracks').append('<div>Nothing matched your search. Try again?</div>');
+			     }
+            },
+            error: function() {
+                $('#tracks').empty();
+                $('#tracks').append('<div>Shit, something went wrong. Try again later.</div>'); 
+            }
         });
     }
 });

@@ -17,7 +17,7 @@ $('#search').keypress(function(e) {
             success: function(response) {
                 var tracks = response.data;
                 $('#tracks').empty();
-			    if (tracks) {
+			    if (!jQuery.isEmptyObject(tracks)) {
 				    $.each(tracks, function(key, track) {
 					   var element='<div><a>'+track.title+'</a></div>';
 					   $('#tracks').append(element);  

@@ -56,7 +56,7 @@ $('#m').keypress(function(e) {
 socket.on('new message', function(username, message, room) {
 	message = message.trim();
     if (message != "") {
-        var element = '<div>' +'<span style="font-weight:700;padding-right:15px">'+username+'</span><span>'+message+'</span><br></div><br>';
+        var element = '<div style="padding: 5px 0px 5px 0px;">' +'<span style="font-weight:700;padding-right:15px;">'+username+'</span><span>'+message+'</span></div>';
         $('#messages').append(element);
         $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
     }   

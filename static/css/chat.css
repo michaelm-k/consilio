@@ -71,7 +71,6 @@ body {
 
 .search .form-control {
     width:99%;
-	border-radius:0px;
 }
 
 form { 
@@ -86,13 +85,11 @@ form .form-control {
     border:1px solid #c9d0da;
     resize:none;
     width:99%;
-	border-radius:0px;
 }
 
 form .btn-primary { 
     width: 99%; 
     margin-top:8px;
-	border-radius:0px;
 }
 
 #tracks {

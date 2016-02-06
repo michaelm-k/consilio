@@ -33,6 +33,8 @@ $('#public').click(function() {
 });
 
 $("#form-create_room").submit(function(e) {
+	$('#form-create_room .btn').prop('disabled', true);
+	$('#form-create_room :input').prop('readonly', true);
     $.ajax({
         url : $(this).attr("action"),
         type: $(this).attr("method"),
@@ -45,9 +47,13 @@ $("#form-create_room").submit(function(e) {
 			} else {
 				alert('Whoops! You may wanna try that again.'); 
 			}	
+			$('#form-create_room .btn').prop('disabled', false);
+			$('#form-create_room :input').prop('readonly', false);
         },
         error: function() {
-            alert('Whoops! You may wanna try that again.');     
+            alert('Whoops! You may wanna try that again.');  
+			$('#form-create_room .btn').prop('disabled', false);
+			$('#form-create_room :input').prop('readonly', false);
         }
     });
     e.preventDefault();

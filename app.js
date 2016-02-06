@@ -1,8 +1,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var session = require('express-session');
-var cookieParser = require('cookie-parser');
-var flash = require('connect-flash');
+//var session = require('express-session');
+//var cookieParser = require('cookie-parser');
+//var flash = require('connect-flash');
 var http = require('http');
 var sio = require('socket.io');
 var SC = require('node-soundcloud'); // https://www.npmjs.com/package/node-soundcloud
@@ -13,9 +13,10 @@ var server = http.createServer(app);
 var io = sio.listen(server);
 
 app.use(bodyParser());
-app.use(cookieParser('secret'));
-app.use(session({cookie: { maxAge: 60000 }}));
-app.use(flash());
+
+//app.use(cookieParser('secret'));
+//app.use(session({cookie: { maxAge: 60000 }}));
+//app.use(flash());
 
 app.set('views', __dirname + '/tpl');
 app.set('view engine', "jade");
@@ -78,9 +79,10 @@ app.get('/:room', function (req, res) {
 app.post('/rooms', function (req, res) {
     var room_number = req.body.room_number;
     var key = req.body.key;
+	var room_type = req.body.room_type;
     if (!(isRoomNumberOccupied(room_number))) {
         room_numbers[room_number] = room_number;
-        if (key) {
+        if (room_type=="private") {
             keys[room_number]=key;
         } else {
             if (keys.hasOwnProperty(room_number)) {
@@ -88,10 +90,12 @@ app.post('/rooms', function (req, res) {
             }          
             public_rooms[room_number] = room_number;
         }
-         res.redirect('/' + room_number); 
+		//res.redirect('/' + room_number); 
+        res.json({room_number: room_number});
     } else {
-         req.flash('info', "That room is taken");
-         res.render('rooms', {message: req.flash('info')});
+         //req.flash('info', "That room is taken");
+         //res.render('rooms', {message: req.flash('info')});
+		 res.json({message: "That room is taken"});
     }   
 });
 
@@ -113,15 +117,19 @@ function usernameExistsInRoom(username, room) {
 io.on('connection', function(socket){      
     socket.on('key or no key', function(room) {
         if (keys.hasOwnProperty(room)) {
-            socket.emit('enter key', keys[room]);
+            socket.emit('enter key');
         } else {
-            socket.emit('enter username');
+            socket.emit('enter username', false);
         }
     });
     
-    socket.on('key good', function() {
-        socket.emit('enter username');
-    });
+	socket.on('verify key', function(room, key) {
+		if (key==keys[room]) {
+			socket.emit('enter username', false);
+		} else {
+			socket.emit('enter key');
+		}
+	});
     
     socket.on('new user', function(username, room) {
         if (!(usernameExistsInRoom(username, room))) {
@@ -135,8 +143,7 @@ io.on('connection', function(socket){
                 room_numbers[room] = room;
             }
             if (!(public_rooms.hasOwnProperty(room)) && !(keys.hasOwnProperty(room))) {
-                public_rooms[room]=room;
-                
+                public_rooms[room]=room;                
             }     
             if (public_rooms.hasOwnProperty(room)) {
                 numUsersInPublicRooms[room] = numUsers;
@@ -150,11 +157,11 @@ io.on('connection', function(socket){
                 }
             }
 
-            socket.emit('you joined', 'welcome, ' + username, username);
-            socket.broadcast.to(socket.room).emit('user joined', username + ' joined'); 
+            socket.emit('user joined', true, 'welcome, ' + username, username);
+            socket.broadcast.to(socket.room).emit('user joined', false, username + ' joined', username); 
             io.to(room).emit('update users', usernames, numUsers);
         } else {
-            socket.emit('username is taken');
+            socket.emit('enter username', true);
         }
     });
     

@@ -20,25 +20,16 @@ socket.on('connect', function() {
     socket.emit('key or no key', room);
 });
 
-socket.on('enter key', function(key) {
-    var _key = "";
-    while (_key !== key) {
-        _key = prompt("Please enter the room's key:");
-    }
-    socket.emit('key good', room);
+socket.on('enter key', function() {
+    var key = prompt("Please enter the room's key:");
+    socket.emit('verify key', room, key);
 });
 
-socket.on('enter username', function() {
-    var username = "";
-    while (username == null || username.trim() == "" || username.length > 10) {
-        username = prompt("Name? (max 10 characters)");
-    }
-    socket.emit('new user', username, room);
-});
-
-socket.on('username is taken', function() {
-    alert("That username is taken");
-    var username = "";
+socket.on('enter username', function(usernameTaken) {
+    if (usernameTaken) {
+		alert("That username is taken");
+	}
+	var username = "";
     while (username == null || username.trim() == "" || username.length > 10) {
         username = prompt("Name? (max 10 characters)");
     }
@@ -63,8 +54,9 @@ $('#m').keypress(function(e) {
 });
 
 socket.on('new message', function(username, message, room) {
-    if (message.trim() != "") {
-        var element = '<div>' +'<b>'+username+':</b> '+message+'<br>'+'</div>' +'<br>';
+	message = message.trim();
+    if (message != "") {
+        var element = '<div>' +'<span style="font-weight:700;padding-right:15px">'+username+'</span><span>'+message+'</span><br></div><br>';
         $('#messages').append(element);
         $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
     }   
@@ -89,16 +81,13 @@ socket.on('new message', function(username, message, room) {
     }
 });
 
-socket.on('user joined', function(message) {
-    $("body").css("display", "block");
-    $('#messages').append($('<li>').text(message));
-    $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
-});
-
-socket.on('you joined', function(message, username) {
-    client_username = username;
-    $("body").css("display", "block");
-    $('#messages').append($('<li>').text(message));
+socket.on('user joined', function(youJoined, message, username) {
+	var element = '<li>';
+	$("body").css("display", "block");
+	if (youJoined) {
+		client_username = username;
+	}
+	$('#messages').append($(element).text(message));   
     $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
 });
 

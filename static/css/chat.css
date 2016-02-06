@@ -55,8 +55,8 @@ body {
 
 #messages li { 
     padding: 5px 5px;
-    margin-bottom: 17px;
-    background: #eee;
+	text-align:center;
+	color: #9197a3;
 }
 
 #messages div {
@@ -71,6 +71,7 @@ body {
 
 .search .form-control {
     width:99%;
+	border-radius:0px;
 }
 
 form { 
@@ -85,12 +86,13 @@ form .form-control {
     border:1px solid #c9d0da;
     resize:none;
     width:99%;
+	border-radius:0px;
 }
 
 form .btn-primary { 
     width: 99%; 
-    border: none; 
     margin-top:8px;
+	border-radius:0px;
 }
 
 #tracks {

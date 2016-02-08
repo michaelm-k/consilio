@@ -81,14 +81,12 @@ app.post('/rooms', function (req, res) {
     var key = req.body.key;
 	var room_type = req.body.room_type;
     if (!(isRoomNumberOccupied(room_number))) {
-        room_numbers[room_number] = room_number;
         if (room_type=="private") {
             keys[room_number]=key;
         } else {
             if (keys.hasOwnProperty(room_number)) {
                 delete keys[room_number];
-            }          
-            public_rooms[room_number] = room_number;
+            }
         }
 		//res.redirect('/' + room_number); 
         res.json({room_number: room_number});
@@ -137,8 +135,7 @@ io.on('connection', function(socket){
             socket.room = room;
             socket.join(room);
             sockets.push(socket);
-            numUsers = countUsersInRoom(room);
-            
+            numUsers = countUsersInRoom(room);           
             if (!(room_numbers.hasOwnProperty(room)) && room!='lobby') {
                 room_numbers[room] = room;
             }
@@ -156,7 +153,6 @@ io.on('connection', function(socket){
                     usernames[username]=username;
                 }
             }
-
             socket.emit('user joined', true, 'welcome, ' + username, username);
             socket.broadcast.to(socket.room).emit('user joined', false, username + ' joined', username); 
             io.to(room).emit('update users', usernames, numUsers);

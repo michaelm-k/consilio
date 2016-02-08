@@ -16,7 +16,7 @@ socket.on('update public rooms', function(public_rooms, numUsersInPublicRooms) {
 
 $("body").css("display", "block");
 
-$('#create_room').click(function() {
+$('#form-create_room .btn').click(function() {
     if ($('#public').is(':checked')) { 
         document.getElementById("key").required = false;
     } else if ($('#private').is(':checked')) {

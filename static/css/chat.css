@@ -29,7 +29,7 @@ body {
     font-size:15px;
 }
 
-#home {
+#icons {
     bottom:4%;
     position:absolute;
     width:10%;
@@ -40,16 +40,19 @@ body {
     float:left;
     width:23%;
     height:100%;
-    padding-left:15px;
-    padding-right:15px;
+    padding-left:0px;
+	padding-right:0px;
     border-right:1px solid #c9d0da;
+	overflow: auto;
 }
 
 #messages { 
     width:100%;
-    height:70%;
+    height:69%;
     overflow-y:auto;
     padding-top:10px;
+	padding-left:15px;
+	padding-right:15px;
     list-style-type: none; 
 }
 
@@ -63,33 +66,51 @@ body {
     word-wrap: break-word;
 }
 
-.search {  
-    position: fixed;  
-    width: 21%;
-    margin-bottom: 9%;
+#forms {
+	width: 100%;
 }
 
-.search .form-control {
-    width:99%;
+#search {
+	border:0;
+	border-top:1px solid #c9d0da;
+	border-bottom:1px solid #c9d0da;
 }
 
-form { 
-    position: fixed; 
-    bottom: 5%; 
-    width: 21%;
-}
-
-form .form-control { 
-    border: 0;    
-    float:left;
-    border:1px solid #c9d0da;
+#m { 
     resize:none;
-    width:99%;
+	border:0;
+	border-color: #ffffff;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+#features {
+	border:0;
 }
 
 form .btn-primary { 
-    width: 99%; 
-    margin-top:8px;
+	width:100%;
+	margin-top:4px;
+}
+
+.dropup #default {
+	opacity:0.6;
+}
+
+.dropup .btn {
+	border:0;
+}
+
+.dropup .dropdown-menu {
+	cursor:pointer;
+}
+
+.open > .dropdown-toggle.btn-default, .open>.dropdown-toggle.btn-default:focus, .open > .dropdown-toggle.btn-default:hover,
+.dropup .btn-default:focus,.dropup .btn-default:hover{
+    color: #ffffff;
+    background-color: #ffffff;
+    border-color: #ffffff;
+	outline:none;	
 }
 
 #tracks {
@@ -105,29 +126,14 @@ form .btn-primary {
     width:37%;
 }
 
-@media (min-width:1200px) {
-	.search {  
-        bottom: 3%; 
-    }
-}
-
-@media (max-width:1200px) {
-	.search {  
-        bottom: 5%; 
-    }
-}
-
 @media (max-width:1100px) {
-	.search {  
-        bottom: 8%; 
-    }
     .users {
         width:12%;
     }
     #player {
         width:35%;
     }
-    #home {
+    #icons {
         width:12%;
     }
 }
@@ -138,25 +144,10 @@ form .btn-primary {
     }
 }
 
-@media (max-width:900px) {
-    .users, #home {
+@media (max-width:850px) {
+	.users, #icons {
         display:none;
     }
-    .container {
-        width:35%;
-    }
-     #player {
-        width:27%;
-    }
-    #tracks {
-        width:38%;
-    }
-    form, .search { 
-        width: 32%;
-    }
-}
-
-@media (max-width:850px) {
     .container {
         width:100%;
         float:none;
@@ -170,18 +161,6 @@ form .btn-primary {
         padding-left:15px;
         padding-right:15px;
         padding-top:15px;
-    }
-    form, .search {
-        position:relative;
-        width:100%;
-        bottom:0;
-    }
-    .search {
-        margin-bottom:15px; 
-    }
-    
-    .search .form-control, form .form-control, form .btn-primary {
-        width:100%;
     }
     
     #tracks {

@@ -4,6 +4,32 @@ var socket = io();
 var isFocused = true;
 var unread_messages=0;
 var client_username;
+var emojisURL = '/static/img/pngs';
+var emojiSize = 20;
+var emojis = [
+		":bowtie:", ":smile:", ":laughing:", ":blush:", ":smirk:", ":kissing_heart:", ":flushed:", ":satisfied:", ":wink:", ":stuck_out_tongue_winking_eye:", 
+		":sleeping:", ":worried:", ":open_mouth:", ":confused:", ":weary:", ":disappointed:", ":cry:", ":neutral_face:", ":yum:", ":rage:", ":unamused:",
+		":poop:", ":thumbsup:", ":thumbsdown:", ":ok_hand:", ":punch:", ":v:", ":point_up:", ":raised_hands:", ":pray:", ":clap:", ":fu:", ":metal:", ":muscle:", 
+		":man_with_turban:", ":100:", ":trollface:"
+	],  
+	test = /\:[a-z0-9_\-\+]+\:/g;
+
+for (var i = 0; i < emojis.length; i++) {
+	var name = String(emojis[i]).slice(1, -1);	
+	var url = emojisURL;
+    var element = '<img class="emoji" title=":' + name + ':" alt="' + name + '" src="' + url + '/' + encodeURIComponent(name) + '.png"' + (emojiSize ? (' height="' + emojiSize + '"') : '') + ' />';
+	$('.dropdown-menu').append(element);
+}	
+
+$( ".dropdown-menu img" ).click(function() {
+  var emoji = $(this).attr("title");
+  var cursorPos = $('#m').prop('selectionStart');
+  var v = $('#m').val();
+  var textBefore = v.substring(0, cursorPos);
+  var textAfter  = v.substring(cursorPos, v.length);
+  $('#m').val(textBefore+emoji+textAfter);
+  $('#m').focus();
+});
 
 function onFocus(){
     isFocused = true;
@@ -37,8 +63,10 @@ socket.on('enter username', function(usernameTaken) {
 });
 
 $('form').submit(function() {
-    var message = $('#m').val();
-    socket.emit('send message', message);
+    var message = $('#m').val().trim();
+	if (message != "") {
+		socket.emit('send message', message);
+	}
     $('#m').val('');
     $('#m').focus();
     return false;
@@ -54,12 +82,10 @@ $('#m').keypress(function(e) {
 });
 
 socket.on('new message', function(username, message, room) {
-	message = message.trim();
-    if (message != "") {
-        var element = '<div style="padding: 5px 0px 5px 0px;">' +'<span style="font-weight:700;padding-right:15px;">'+username+'</span><span>'+message+'</span></div>';
-        $('#messages').append(element);
-        $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
-    }   
+    message = emoji(message, emojisURL, emojiSize, emojis, test); 
+	var element = '<div style="padding: 5px 0px 5px 0px;white-space:normal;">' +'<span style="font-weight:700;">'+username+'</span><p>'+message+'</p></div>';
+    $('#messages').append(element);
+    $('#messages').stop(true).animate({scrollTop: $('#messages').get(0).scrollHeight}, 0);
     
     if (!isFocused) {    
         ++unread_messages;

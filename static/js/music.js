@@ -8,7 +8,7 @@ $('#search').keypress(function(e) {
         $('#tracks').css('display', 'block');
         var query = $('#search').val();
         $('#tracks').empty();
-		$('#tracks').append('<div>Loading... Please wait</div>');
+		$('#tracks').append('<div style="font-weight:700">Loading... Please wait.</div>');
 
         $.ajax({
             type: 'POST',
@@ -25,12 +25,12 @@ $('#search').keypress(function(e) {
 					   $("#tracks a").last().bind('click', false);
 				    });
 			     } else {
-				    $('#tracks').append('<div>Nothing matched your search. Try again?</div>');
+				    $('#tracks').append('<div style="font-weight:700">Nothing matched your search. Try again?</div>');
 			     }
             },
             error: function() {
                 $('#tracks').empty();
-                $('#tracks').append('<div>Shit, something went wrong. Try again later.</div>'); 
+                $('#tracks').append('<div style="font-weight:700">Shit, something went wrong. Try again later.</div>'); 
             }
         });
     }

@@ -6,10 +6,10 @@ var bodyParser = require('body-parser');
 var http = require('http');
 var sio = require('socket.io');
 var SC = require('node-soundcloud'); // https://www.npmjs.com/package/node-soundcloud
+
 var app = express();
 var port = process.env.PORT || 5000;
 var server = http.createServer(app);
-
 var io = sio.listen(server);
 
 app.use(bodyParser());

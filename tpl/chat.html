@@ -3,18 +3,26 @@
     <div id="users"></div>
 </div>
 
-<div id="home">
-    <a href="/"><i class="fa fa-home fa-3x"></i></a>
+<div id="icons">
+	<div id="home"><a href="/"><i class="fa fa-home fa-3x"></i></a></div>
 </div>
 
 <div class="container">
     <ul id="messages"></ul>
-    <div class="forms">
+    <div id="forms">
         <div class="search">
 			<input id="search" class="form-control" placeholder="Find music" name="query"/>
 		</div>
         <form>
-			<textarea id="m" autocomplete="off" class="form-control" placeholder="Say something..."></textarea>
+			<div><textarea id="m" autocomplete="off" class="form-control" placeholder="Say something..."></textarea></div>
+			<div id="features">	
+				<div class="dropup">
+					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<img id="default" class="emoji" title="Pick an emoticon" alt="neutral_face" src="/static/img/pngs/neutral_face.png" height="20">
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenu2"></ul>
+				</div>
+			</div>
             <button class="btn btn-primary">Send</button>
         </form>
     </div>

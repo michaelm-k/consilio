@@ -1,16 +1,10 @@
 extends layout
 
-block append title
-    meta(name="description", content="Listen to this chat.")
-
 block append head
     link(rel="stylesheet", href="/static/css/rooms.css") 
 
 block content
     include rooms.html
-    //-if(message)
-    //    script.
-    //       alert('#{message}');
     
 block append scripts
     script(src="/static/js/rooms.js")

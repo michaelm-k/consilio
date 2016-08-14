@@ -43,7 +43,11 @@
 }
 
 @media (max-width: 850px) {
-    #public_rooms {
+    h1, #heading1{
+		font-size: 30px;
+	}
+	
+	#public_rooms {
         height:200px;    
     }
     

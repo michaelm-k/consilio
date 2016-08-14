@@ -56,8 +56,8 @@ socket.on('enter username', function(usernameTaken) {
 		alert("That username is taken");
 	}
 	var username = "";
-    while (username == null || username.trim() == "" || username.length > 10) {
-        username = prompt("Name? (max 10 characters)");
+    while (username == null || username.trim() == "" || username.length > 10 || username.length < 2) {
+        username = prompt("Name? (min 2 characters, max 10)");
     }
     socket.emit('new user', username, room);
 });
